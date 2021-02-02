@@ -31,13 +31,14 @@ public class AppService {
 	// AUTHENTICATE USER
 	public boolean authenticateUser(String email, String password) {
 		// first find the user by email
-		User user = userRepo.findByEmail(email);
+		Optional<User> user = userRepo.findByEmail(email);
 		// if we can't find it by email, return false
 		if (user == null) {
 			return false;
 		}
 		// if the passwords match, return true, else, return false
-		return BCrypt.checkpw(password, user.getPassword());
+		User usuario = user.get();
+		return BCrypt.checkpw(password, usuario.getPassword());
 	}
 	
 	// REGISTER USER AND HASH THEIR PASSWORD
@@ -59,7 +60,13 @@ public class AppService {
 	
 	// FIND USER BY EMAIL
 	public User findUserByEmail(String email) {
-		return userRepo.findByEmail(email);
+		Optional<User> user = userRepo.findByEmail(email);
+		if (user.isPresent()) {
+			return user.get();
+		} 
+		else{
+			return null;
+		}
 	}
 	
 	// FIND USER BY ID
