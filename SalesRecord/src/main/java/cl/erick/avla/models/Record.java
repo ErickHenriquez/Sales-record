@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -26,24 +25,18 @@ public class Record {
 	
 	@Column(updatable = false)
 	private Date createdAt;
-	private Date updatedAt;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="usuario_id")
-    private User usuario;
+    private User user;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="producto_id")
-    private Product producto;
+    private Product product;
 	
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = new Date();
 	}
 	
 	// Constructors
@@ -77,28 +70,20 @@ public class Record {
 		this.createdAt = createdAt;
 	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public User getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(User usuario) {
-		this.usuario = usuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Product getProducto() {
-		return producto;
+		return product;
 	}
 
 	public void setProducto(Product producto) {
-		this.producto = producto;
+		this.product = producto;
 	}
 	
 	

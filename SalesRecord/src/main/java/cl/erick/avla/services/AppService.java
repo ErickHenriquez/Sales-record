@@ -87,22 +87,47 @@ public class AppService {
 	
 	// PRODUCT SERVICES
 	
-	public List<Product> findAllProducts(){
-		return productRepo.findAll();
-	}
-	
 	public Product createProduct(Product product) {
 		return productRepo.save(product);
 	}
 	
+	public List<Product> findAllProducts(){
+		return productRepo.findAll();
+	}
+	
+	public Product findProductById(Long id) {
+		Optional<Product> product = productRepo.findById(id);
+		if (product.isPresent()) {
+			return product.get();
+		} 
+		else{
+			return null;
+		}
+	}
+	
+	// DELETE PRODUCT
+	public void deleteProduct(Long id) {
+		productRepo.delete(findProductById(id));
+	}	
+	
+	
 	// RECORD SERVICES
+	
+	public Record createRecord(Record record) {
+		return recordRepo.save(record);
+	}
 	
 	public List<Record> findAllRecords(){
 		return recordRepo.findAll();
 	}
 	
-	public Record createRecord(Record record) {
-		return recordRepo.save(record);
+	public List<Record> findRecordsByUserId(User user){
+		return recordRepo.findByUser(user);
 	}
+	
+	public List<Record> findRecordsByProductId(Product product){
+		return recordRepo.findByProduct(product);
+	}
+
 
 }

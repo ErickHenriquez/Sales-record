@@ -9,10 +9,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="productos")
@@ -30,9 +34,15 @@ public class Product {
 	private Date createdAt;
 	private Date updatedAt;
 	
-	@OneToMany(mappedBy="producto", fetch = FetchType.EAGER)
-    private List<Record> records;
-	
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "historial", 
+        joinColumns = @JoinColumn(name = "producto_id"), 
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+	@JsonIgnore
+    private List<User> users;
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();
@@ -98,13 +108,13 @@ public class Product {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-
-	public List<Record> getRecords() {
-		return records;
+	
+	public List<User> getUsers() {
+		return users;
 	}
 
-	public void setRecords(List<Record> records) {
-		this.records = records;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	

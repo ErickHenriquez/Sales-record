@@ -30,7 +30,7 @@ public class UserAPI {
 	private AppService appService;
 	
 	// CREATE NEW USER
-	@PostMapping("/registration")
+	@PostMapping("/new")
 	public ResponseEntity<User> registerUser(@RequestBody User usuario) {
 		User u = appService.findUserByEmail(usuario.getEmail());
 		if ( u != null) {

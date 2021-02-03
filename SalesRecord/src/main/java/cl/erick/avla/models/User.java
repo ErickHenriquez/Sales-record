@@ -9,14 +9,17 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -36,15 +39,19 @@ public class User {
 	
 	@Size(min=8, message="La contraseña debe tener al menso 8 caracteres")
 	private String password;
-	@Transient
-	private String passwordConfirm;
 	
 	@Column(updatable = false)
 	private Date createdAt;
 	private Date updatedAt;
 	
-	@OneToMany(mappedBy="usuario", fetch = FetchType.EAGER)
-    private List<Record> records;
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "historial", 
+        joinColumns = @JoinColumn(name = "usuario_id"), 
+        inverseJoinColumns = @JoinColumn(name = "producto_id")
+    )
+	@JsonIgnore
+    private List<Product> products;
 	
 	@PrePersist
 	protected void onCreate() {
@@ -95,14 +102,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getPasswordConfirm() {
-		return passwordConfirm;
-	}
-
-	public void setPasswordConfirm(String passwordConfirm) {
-		this.passwordConfirm = passwordConfirm;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -119,12 +118,13 @@ public class User {
 		this.updatedAt = updatedAt;
 	}
 
-	public List<Record> getRecords() {
-		return records;
+	public List<Product> getProducts() {
+		return products;
 	}
 
-	public void setRecords(List<Record> records) {
-		this.records = records;
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
+
 
 }
